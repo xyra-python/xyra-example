@@ -1,0 +1,10 @@
+[project]
+name = "xyra-example"
+version = "0.1.0"
+description = "example for xyra"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+     "aiosqlite>=0.21.0",
+     "xyra>=0.1.3",
+]
