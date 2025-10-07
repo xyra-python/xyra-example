@@ -17,3 +17,6 @@ wheels/
 
 .ruff_cache/*
 
+uv.*
+
+*.lock
