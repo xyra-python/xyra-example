@@ -1,0 +1,9 @@
+[project]
+name = "staticfiles-example"
+version = "0.1.0"
+description = "Static files serving example with Xyra"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "xyra>=0.1.3",
+]

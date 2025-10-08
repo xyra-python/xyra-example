@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 from typing import Optional
 from jose import JWTError, jwt
 from passlib.context import CryptContext
+from .settings import settings
 
 # Use argon2 instead of bcrypt - no length limits!
 pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
@@ -32,6 +33,3 @@ async def verify_token(token: str) -> str:
         return email
     except (JWTError, ValueError):
         raise ValueError("Could not validate credentials")
-
-# Import settings at the end to avoid circular imports
-from .settings import settings

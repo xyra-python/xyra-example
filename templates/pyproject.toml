@@ -1,0 +1,9 @@
+[project]
+name = "templates-swagger-example"
+version = "0.1.0"
+description = "Templates and Swagger example with Xyra"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "xyra>=0.1.3",
+]

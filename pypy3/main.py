@@ -8,10 +8,6 @@ app = App(
 def hello(req: Request, res: Response):
     res.json({"message": "Hello, Xyra!"})
 
-@app.get("/test")
-async def test(req: Request, res: Response):
-    res.send("Hello world")
-
 @app.get("/users/{user_id}")
 def get_user(req: Request, res: Response):
     user_id = req.params.get("user_id")

@@ -1,5 +1,4 @@
 import asyncio
-from logging import Logger
 import aiosqlite
 from xyra import App, Request, Response
 from sqlite3 import IntegrityError
