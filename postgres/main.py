@@ -1,11 +1,12 @@
-from xyra import App, Request, Response
-from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
-from sqlalchemy import select
-from typing import Optional
-import os
 import asyncio
+import os
+
 from dotenv import load_dotenv
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+
+from xyra import App, Request, Response
 
 load_dotenv()
 
@@ -40,7 +41,7 @@ async def create_user_in_db(session, name: str, email: str):
     await session.refresh(user)
     return user
 
-async def update_user_in_db(session, user, name: Optional[str], email: Optional[str]):
+async def update_user_in_db(session, user, name: str | None, email: str | None):
     if name:
         user.name = name
     if email:

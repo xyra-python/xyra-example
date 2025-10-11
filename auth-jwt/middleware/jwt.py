@@ -1,5 +1,7 @@
-from xyra import Request, Response
 from config.security import verify_token
+
+from xyra import Request, Response
+
 
 async def jwt_middleware(req: Request, res: Response, next_call):
     # Skip authentication for auth routes

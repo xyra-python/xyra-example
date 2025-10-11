@@ -6,5 +6,5 @@ readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
      "aiosqlite>=0.21.0",
-     "xyra>=0.1.3",
+     "xyra>=0.1.7",
 ]

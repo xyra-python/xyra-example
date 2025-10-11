@@ -5,11 +5,11 @@ app = App(
 )
 
 @app.get("/")
-def hello(req: Request, res: Response):
-    res.json({"message": "Hello, Xyra!"})
+async def hello(req: Request, res: Response):
+    return {"message": "Hello, Xyra!"}
 
 @app.get("/users/{user_id}")
-def get_user(req: Request, res: Response):
+async def get_user(req: Request, res: Response):
     user_id = req.params.get("user_id")
     res.json({"user_id": user_id, "name": f"User {user_id}"})
 

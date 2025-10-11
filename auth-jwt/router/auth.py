@@ -1,8 +1,10 @@
-from xyra import Request, Response
-from database.engine import get_db
-from handler.schemas import UserCreate, UserLogin
-from handler.crud import create_user, get_user_by_email
 from config.security import create_access_token
+from database.engine import get_db
+from handler.crud import create_user, get_user_by_email
+from handler.schemas import UserCreate, UserLogin
+
+from xyra import Request, Response
+
 
 def register_auth_routes(app):
     @app.post("/auth/register")

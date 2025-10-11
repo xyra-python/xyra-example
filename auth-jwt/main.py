@@ -1,10 +1,12 @@
 import asyncio
-from xyra import App
+
 from database.engine import init_db
 from middleware.cors import cors_middleware
 from middleware.jwt import jwt_middleware
 from router.auth import register_auth_routes
 from router.user import register_user_routes
+
+from xyra import App
 
 app = App(swagger_options={
     "title": "Indra"

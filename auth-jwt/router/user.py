@@ -1,7 +1,15 @@
-from xyra import Request, Response
 from database.engine import get_db
+from handler.crud import (
+    delete_user,
+    get_user,
+    get_user_by_email,
+    get_users,
+    update_user,
+)
 from handler.schemas import UserUpdate
-from handler.crud import get_users, get_user, update_user, delete_user, get_user_by_email
+
+from xyra import Request, Response
+
 
 def register_user_routes(app):
     @app.get("/users")

@@ -5,7 +5,7 @@ description = "JWT Authentication example for Xyra framework"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
-    "xyra",
+    "xyra>=0.1.7",
     "sqlalchemy>=2.0.0",
     "alembic>=1.13.0",
     "pydantic>=2.0.0",

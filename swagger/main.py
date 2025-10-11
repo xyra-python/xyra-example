@@ -43,7 +43,7 @@ items = [
 ]
 
 @app.get("/")
-def root(req: Request, res: Response):
+async def root(req: Request, res: Response):
     """
     Root endpoint.
 
@@ -57,7 +57,7 @@ def root(req: Request, res: Response):
     })
 
 @app.get("/items")
-def get_items(req: Request, res: Response):
+async def get_items(req: Request, res: Response):
     """
     Get all items.
 
@@ -68,13 +68,13 @@ def get_items(req: Request, res: Response):
     Returns:
         list: List of items.
     """
-    limit = int(req.query.get("limit", 10))
-    offset = int(req.query.get("offset", 0))
+    limit = int(req.query_params.get("limit", ["10"])[0])
+    offset = int(req.query_params.get("offset", ["0"])[0])
     paginated_items = items[offset:offset + limit]
     res.json(paginated_items)
 
 @app.get("/items/{item_id}")
-def get_item(req: Request, res: Response):
+async def get_item(req: Request, res: Response):
     """
     Get item by ID.
 
@@ -95,7 +95,7 @@ def get_item(req: Request, res: Response):
         res.status(404).json({"error": "Item not found"})
 
 @app.post("/items")
-def create_item(req: Request, res: Response):
+async def create_item(req: Request, res: Response):
     """
     Create a new item.
 
@@ -107,7 +107,7 @@ def create_item(req: Request, res: Response):
     Returns:
         dict: Created item.
     """
-    data = req.json()
+    data = await req.json()
     new_item = {
         "id": len(items) + 1,
         "name": data.get("name"),
@@ -117,8 +117,9 @@ def create_item(req: Request, res: Response):
     items.append(new_item)
     res.status(201).json(new_item)
 
+
 @app.put("/items/{item_id}")
-def update_item(req: Request, res: Response):
+async def update_item(req: Request, res: Response):
     """
     Update an existing item.
 
@@ -137,7 +138,7 @@ def update_item(req: Request, res: Response):
         404: If item not found.
     """
     item_id = int(req.params.get("item_id"))
-    data = req.json()
+    data = await req.json()
     item = next((i for i in items if i["id"] == item_id), None)
     if item:
         item.update(data)
@@ -146,7 +147,7 @@ def update_item(req: Request, res: Response):
         res.status(404).json({"error": "Item not found"})
 
 @app.delete("/items/{item_id}")
-def delete_item(req: Request, res: Response):
+async def delete_item(req: Request, res: Response):
     """
     Delete an item.
 
@@ -165,14 +166,14 @@ def delete_item(req: Request, res: Response):
     res.json({"message": "Item deleted"})
 
 @app.get("/health")
-def health_check(req: Request, res: Response):
+async def health_check(req: Request, res: Response):
     """
     Health check endpoint.
 
     Returns:
         dict: Health status.
     """
-    res.json({"status": "healthy", "timestamp": "2023-01-01T00:00:00Z"})
+    res.json({"status": "healthy", "timestamp": "2025-01-01T00:00:00Z"})
 
 if __name__ == "__main__":
-    app.listen(8000)
+    app.listen(8000, logger=True, reload=True)

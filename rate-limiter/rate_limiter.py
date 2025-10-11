@@ -14,4 +14,5 @@ def get_data(req, res):
 def data(req, res):
     res.json({"data": "some data"})
 
-app.listen(8000, logger=True, reload=True)
+if __name__ == "__main__":
+    app.listen(8000, logger=True, reload=True)

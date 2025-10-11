@@ -9,7 +9,7 @@ app.static_files("/static", "static")
 # app.templates.add_global("static", lambda path: f"/static/{path}")
 
 @app.get("/")
-def index(req: Request, res: Response):
+async def index(req: Request, res: Response):
     res.render("index.html", title="Static Files Example")
 
 if __name__ == "__main__":

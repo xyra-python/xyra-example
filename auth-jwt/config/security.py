@@ -1,7 +1,8 @@
 from datetime import datetime, timedelta
-from typing import Optional
+
 from jose import JWTError, jwt
 from passlib.context import CryptContext
+
 from .settings import settings
 
 # Use argon2 instead of bcrypt - no length limits!
@@ -14,7 +15,7 @@ def get_password_hash(password: str) -> str:
     # Argon2 doesn't have 72-byte limit like bcrypt
     return pwd_context.hash(password)
 
-def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
+def create_access_token(data: dict, expires_delta: timedelta | None = None) -> str:
     to_encode = data.copy()
     if expires_delta:
         expire = datetime.utcnow() + expires_delta

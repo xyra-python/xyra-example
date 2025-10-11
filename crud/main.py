@@ -1,12 +1,17 @@
 import asyncio
-import aiosqlite
-from xyra import App, Request, Response
 from sqlite3 import IntegrityError
 
+import aiosqlite
+
+from xyra import App, Request, Response
 
 DB_PATH = "./users.db"
 
-app = App()
+app = App(swagger_options={
+    "title": "Swagger Example API",
+    "version": "1.0.0",
+    "description": "A comprehensive API example with Swagger documentation",
+})
 
 async def create_db():
     async with aiosqlite.connect(DB_PATH) as db:
@@ -27,7 +32,8 @@ async def create_user(req: Request, res: Response):
         name = user_data.get("name")
         email = user_data.get("email")
         if not name or not email:
-            return res.status(400).json({"error": "Name and email are required"})
+            res.status(400).json({"error": "Name and email are required"})
+            return
 
         async with aiosqlite.connect(DB_PATH) as db:
             await db.execute(
@@ -40,50 +46,52 @@ async def create_user(req: Request, res: Response):
             row = await cur.fetchone()
             user_id = row[0]
 
-        return res.status(201).json({"id": user_id, "name": name, "email": email})
+        res.status(201).json({"id": user_id, "name": name, "email": email})
     except IntegrityError:
         return res.status(400).json({"error": "Email already registered"})
     except Exception as e:
         return res.status(500).json({"error": str(e)})
 
-@app.get("/users/")
-async def read_users(req: Request, res: Response):
-    async with aiosqlite.connect(DB_PATH) as db:
-        cur = await db.execute("SELECT id, name, email FROM users")
-        rows = await cur.fetchall()
-        users = [{"id": row[0], "name": row[1], "email": row[2]} for row in rows]
-    return res.json(users)
-
 @app.get("/users/{user_id}")
 async def read_user(req: Request, res: Response):
-    user_id = req.params.get("user_id")
-    if not user_id:
-        return res.status(400).json({"error": "Invalid user ID"})
+    user_id_str = req.params.get("user_id")
+    if not user_id_str:
+        res.status(400).json({"error": "Invalid user ID"})
+        return
+
+    try:
+        user_id = int(user_id_str)
+    except ValueError:
+        res.status(400).json({"error": "User ID must be integer"})
+        return
 
     async with aiosqlite.connect(DB_PATH) as db:
         cur = await db.execute(
             "SELECT id, name, email FROM users WHERE id = ?",
-            (int(user_id),)
+            (user_id,)
         )
         row = await cur.fetchone()
         if not row:
-            return res.status(404).json({"error": "User not found"})
+            res.status(404).json({"error": "User not found"})
+            return
 
         user = {"id": row[0], "name": row[1], "email": row[2]}
-        return res.json(user)
+        res.json(user)
 
 @app.put("/users/{user_id}")
 async def update_user(req: Request, res: Response):
     user_id = req.params.get("user_id")
     if not user_id:
-        return res.status(400).json({"error": "Invalid user ID"})
+        res.status(400).json({"error": "Invalid user ID"})
+        return
 
     try:
         user_data = await req.json()
         name = user_data.get("name")
         email = user_data.get("email")
         if not name or not email:
-            return res.status(400).json({"error": "Name and email are required"})
+            res.status(400).json({"error": "Name and email are required"})
+            return
 
         async with aiosqlite.connect(DB_PATH) as db:
             await db.execute(
@@ -95,20 +103,22 @@ async def update_user(req: Request, res: Response):
             cur = await db.execute("SELECT id, name, email FROM users WHERE id = ?", (int(user_id),))
             row = await cur.fetchone()
             if not row:
-                return res.status(404).json({"error": "User not found"})
+                res.status(404).json({"error": "User not found"})
+                return
 
         updated_user = {"id": row[0], "name": row[1], "email": row[2]}
-        return res.json(updated_user)
+        res.json(updated_user)
     except IntegrityError:
-        return res.status(400).json({"error": "Email already registered"})
+        res.status(400).json({"error": "Email already registered"})
     except Exception as e:
-        return res.status(500).json({"error": str(e)})
+        res.status(500).json({"error": str(e)})
 
 @app.delete("/users/{user_id}")
 async def delete_user(req: Request, res: Response):
     user_id = req.params.get("user_id")
     if not user_id:
-        return res.status(400).json({"error": "Invalid user ID"})
+        res.status(400).json({"error": "Invalid user ID"})
+        return
 
     async with aiosqlite.connect(DB_PATH) as db:
         await db.execute("DELETE FROM users WHERE id = ?", (int(user_id),))
@@ -117,10 +127,11 @@ async def delete_user(req: Request, res: Response):
         cur = await db.execute("SELECT id FROM users WHERE id = ?", (int(user_id),))
         row = await cur.fetchone()
         if not row:
-            return res.status(404).json({"error": "User not found"})
+            res.status(404).json({"error": "User not found"})
+            return
 
-    return res.json({"message": "User deleted successfully"})
+    res.json({"message": "User deleted successfully"})
 
 if __name__ == "__main__":
     asyncio.run(create_db())
-    app.listen(8080, reload=True)
+    app.listen(8000, reload=True, logger=True)

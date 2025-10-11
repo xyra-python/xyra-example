@@ -1,12 +1,15 @@
 # database/models/user.py
-import sys
 import os
+import sys
+
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 
+from config.security import get_password_hash, verify_password
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.ext.asyncio import AsyncAttrs
+
 from database.engine import Base
-from config.security import get_password_hash, verify_password
+
 
 class User(AsyncAttrs, Base):
     __tablename__ = "users"

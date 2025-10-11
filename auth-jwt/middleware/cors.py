@@ -1,5 +1,6 @@
 from xyra import Request, Response
 
+
 async def cors_middleware(req: Request, res: Response, next_call):
     res.header("Access-Control-Allow-Origin", "*")
     res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
